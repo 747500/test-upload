@@ -114,7 +114,7 @@ export default {
 					task.file,
 					{
 						headers: {
-							'Last-Modified': task.file.lastModifiedDate.toString(),
+							'Last-Modified': task.file.lastModifiedDate.toISOString(),
 							'X-Meta-Caption': encodeURIComponent(task.caption || ''),
 							'X-Meta-Filename': encodeURIComponent(task.file.name),
 							'Content-Type': task.file.type
