@@ -39,10 +39,6 @@ export default {
 
 	methods: {
 
-		makeUrl (f) {
-			return `/uploads/${f}?download=true`
-		},
-
 		onDelete (f) {
 
 			this.$http
