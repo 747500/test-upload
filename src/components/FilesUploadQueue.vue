@@ -63,21 +63,13 @@ export default {
 		iimg,
 		bsButton,
 	},
-	model: {
-		prop: 'oid',
-	},
-	props: {
-		oid: String,
-	},
 	data () {
 		return {
-			docId: null,
 			queue: []
 		}
 	},
 
 	created () {
-		this.docId = this.$props.oid
 	},
 
 	methods: {
@@ -109,7 +101,6 @@ export default {
 
 		upload () {
 			const queue = this.queue
-			const docId = this.docId
 
 			var q = async.queue((task, callback) => {
 
@@ -119,7 +110,7 @@ export default {
 				}
 
 				this.$http.post(
-					`f/${docId}/upload/${task.file.name}`,
+					'/upload',
 					task.file,
 					{
 						headers: {
@@ -139,13 +130,7 @@ export default {
 					callback()
 				})
 				.catch(err => {
-					if (404 === err.status) {
-						console.log('404 but Ok')
-						callback()
-					}
-					else {
-						console.error(err)
-					}
+					console.error(err)
 				})
 
 			}, 1);
