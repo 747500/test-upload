@@ -5,7 +5,11 @@ import express from 'express'
 
 import bodyParser from 'body-parser'
 
-fs.mkdir('uploads', err => {
+
+const UPLOADDIR = './uploads'
+
+
+fs.mkdir(UPLOADDIR, err => {
 	if (err && 'EEXIST' !== err.code) {
 		console.error(err)
 		process.exit(1)
@@ -21,13 +25,36 @@ app.use((req, res, next) => {
 
 app.use(express.static('dist'))
 
+app.use('/uploads', (req, res, next) => {
+	if (req.query.dl) {
+		res.locals.dl = true
+	}
+	next()
+})
+
+app.use('/uploads', express.static(UPLOADDIR, {
+	setHeaders (res, path) {
+
+		if (res.locals.dl) {
+
+			const contentDisposition = 'attachment;filename=' +
+					querystring.escape(path.split('/').pop())
+
+			res.set({
+				'Content-Disposition': contentDisposition
+			})
+		}
+
+	}
+}))
+
 app.post('/upload', (req, res, next) => {
 
 	const fname = querystring.unescape(req.headers['x-meta-filename'])
 
 	console.log(fname)
 
-	const outStream = new fs.createWriteStream(`./uploads/${fname}`)
+	const outStream = fs.createWriteStream(`${UPLOADDIR}/${fname}`)
 
 	req.on('error', err => next(err))
 
@@ -38,6 +65,35 @@ app.post('/upload', (req, res, next) => {
 	})
 
 })
+
+app.get('/list', (req, res, next) => {
+
+	fs.readdir(UPLOADDIR, (err, data) => {
+		if (err) {
+			next(err)
+			return
+		}
+
+		res.setHeader('content-type', 'application/json')
+
+		res.send(data)
+	})
+
+})
+
+app.delete('/uploads/:filename', (req, res, next) => {
+
+	fs.unlink(`${UPLOADDIR}/${req.params.filename}`, (err) => {
+		if (err) {
+			next(err)
+			return
+		}
+
+		res.send('ok')
+	})
+
+})
+
 
 const PORT = 28080
 

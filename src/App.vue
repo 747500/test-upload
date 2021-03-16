@@ -1,28 +1,58 @@
-<template>
-	<div id="app">
-		<FilesUploadQueue class="queue"/>
-	</div>
+<template lang="pug">
+
+	div#app
+		FilesList(class="files-list" :key="listKey")/
+		hr(noshade)
+		FilesUploadQueue(class="queue" @active="onUploadActive")/
+
+
 </template>
 
 <script>
+
+import FilesList from './components/FilesList.vue'
 import FilesUploadQueue from './components/FilesUploadQueue.vue'
 
 export default {
-  name: 'App',
-  components: {
-    FilesUploadQueue,
-  }
+
+	name: 'App',
+
+	components: {
+		FilesList,
+		FilesUploadQueue,
+	},
+
+	data () {
+		return {
+			listKey: null,
+		}
+	},
+
+	methods: {
+		onUploadActive (status) {
+			if (false === status) {
+				this.listKey = Date.now()
+			}
+		}
+	}
+
 }
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+	font-family: Avenir, Helvetica, Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-align: center;
+	color: #2c3e50;
+	margin-top: 3rem;
+}
+
+.files-list {
+	text-align: left;
+	width: 32rem;
+	margin: 1rem auto;
 }
 
 .queue .list {

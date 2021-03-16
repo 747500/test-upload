@@ -58,14 +58,17 @@ import iimg from './iimg.vue'
 import bsButton from './bsButton.vue'
 
 export default {
+
 	name: 'FilesUploadQueue',
+
 	components: {
 		iimg,
 		bsButton,
 	},
+
 	data () {
 		return {
-			queue: []
+			queue: [],
 		}
 	},
 
