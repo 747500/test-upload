@@ -25,17 +25,10 @@ app.use((req, res, next) => {
 
 app.use(express.static('dist'))
 
-app.use('/uploads', (req, res, next) => {
-	if (req.query.dl) {
-		res.locals.dl = true
-	}
-	next()
-})
-
 app.use('/uploads', express.static(UPLOADDIR, {
 	setHeaders (res, path) {
 
-		if (res.locals.dl) {
+		if (res.req.query.dl) {
 
 			const contentDisposition = 'attachment;filename=' +
 					querystring.escape(path.split('/').pop())
