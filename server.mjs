@@ -6,8 +6,10 @@ import express from 'express'
 import bodyParser from 'body-parser'
 
 fs.mkdir('uploads', err => {
-	console.error(err)
-	process.exit(1)
+	if (err && 'EEXIST' !== err.code) {
+		console.error(err)
+		process.exit(1)
+	}
 })
 
 const app = express()
